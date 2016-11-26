@@ -13,5 +13,5 @@ import java.lang.annotation.ElementType;
 @Target(ElementType.METHOD)
 public @interface Operation {
 	String value();
-	String result() default "int";
+	String result() default "";
 }

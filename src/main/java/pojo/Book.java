@@ -2,11 +2,24 @@ package pojo;
 
 import java.sql.Date;
 
+import verso.annotation.Table;
+import verso.annotation.Column;
+
+@Table("book")
 public class Book {
-	Integer id;
+    @Column("id") 
+    Integer id;
+    
+	@Column("author") 
 	Integer authorId;
+	
+	@Column("name")
 	String name;
+	
+	@Column("comment")
 	String comment;
+	
+	@Column("finishTime")
 	Date finishTime;
 		
 	public Integer getId() {
@@ -38,5 +51,11 @@ public class Book {
 	}
 	public void setFinishTime(Date finishTime) {
 		this.finishTime = finishTime;
+	}
+	
+	@Override
+	public String toString() {
+	    return String.format("id=%d, author=%d, name=%s, comment=%s, finishTime=%s", 
+	            id, authorId, name, comment, finishTime);
 	}
 }

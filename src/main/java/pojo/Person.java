@@ -1,7 +1,15 @@
 package pojo;
 
+import verso.annotation.Table;
+import verso.annotation.Column;
+
+@Table("person")
 public class Person {
+    
+    @Column("id")
 	Integer id;
+    
+    @Column("name")
 	String name;
 	
 	public String getName() {

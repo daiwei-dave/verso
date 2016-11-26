@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import verso.annotation.Operation;
+import verso.annotation.Table;
 import verso.reflection.ParamParser;
 
 public class MappedStatement {
@@ -26,12 +27,11 @@ public class MappedStatement {
 	
 	static public MappedStatement getInstance(Method method) throws Exception {
 		
-		if (!map.containsKey(method)) synchronized(map) {
-			if (!map.containsKey(method)) {
-				map.put(method, new MappedStatement(method));
-			}
+	    MappedStatement mappedStmt = map.get(method);
+		if (mappedStmt == null) {
+		    map.put(method, mappedStmt = new MappedStatement(method));
 		}
-		return map.get(method);
+		return mappedStmt;
 	}
 	
 	private MappedStatement(Method method) throws Exception {
@@ -46,7 +46,13 @@ public class MappedStatement {
 		} catch (IllegalArgumentException e) {
 			throw new Exception("Unknown sql statement in Annotation of Method " + method.getName());
 		}
-				
+		// 若没有指定返回类型，并且sql语句为select
+		if (sqlType == SqlCommandType.SELECT && "".equals(resultType)) {
+		    Table table = returnType.getAnnotation(Table.class);
+		    if (table != null) {
+		        resultType = table.value();
+		    }
+		}
 		Pattern p = Pattern.compile("\\{[^\\}]+\\}");
 		Matcher m = p.matcher(sql);
 		if (m.find()) {

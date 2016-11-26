@@ -44,22 +44,10 @@ public class XMLConfigBuilder
         	throw new Exception("[config]: root should be <config>");
         }
         evalDataSource(node.element("database"));
-        for (Object item : node.elements("bean")) evalBean((Element) item);
         for (Object item : node.elements("result-map")) evalResultMap((Element) item);
       
     }
     
-	public static void evalBean(Element node) {
-    	String value = getValue(node);
-    	try {
-			Class<?> clazz = loader.loadClass(value);
-			String name = node.attributeValue("name");
-			if (name == null) name = clazz.getSimpleName();
-			config.putDao(name, clazz);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-    }
 	public static void evalResultMap(Element node) throws Exception {
 		// 映射表名与类名 
 		String key = node.attributeValue("name");
@@ -87,21 +75,10 @@ public class XMLConfigBuilder
 			}			
 		}
 		config.putResult(key, mapper);
-		// 暂且这样吧
-		MappedResult primResult = new MappedPrimitiveResult(); 
-		config.putResult("string", primResult);
-		config.putResult("byte", primResult);
-		config.putResult("short", primResult);
-		config.putResult("int", primResult);
-		config.putResult("long", primResult);
-		config.putResult("double", primResult);
-		config.putResult("float", primResult);
-		config.putResult("bool", primResult);
-		config.putResult("char", primResult);
 	}
 	
 	public static void evalDataSource(Element node) throws Exception {
-		DataSource data = new DataSource(); 
+		VDataSource data = new VDataSource(); 
 		for (Object item : node.elements("property")) {
 			Element i = (Element) item;			
 			String value = getValue(i);

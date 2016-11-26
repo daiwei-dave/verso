@@ -4,10 +4,12 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import verso.annotation.Table;
 import verso.mapper.MappedResult;
 
 public class MappedBeanResult implements MappedResult 
@@ -46,6 +48,10 @@ public class MappedBeanResult implements MappedResult
 			if (get(name) != null)
 				columns.add(name);
 		}
+		if (returnType.isAssignableFrom(Collection.class)) {
+		    // TODO 若是集合类
+		}
+		
 		if (returnType == List.class || returnType.isArray()) {
 			List<Object> ans = new ArrayList<>();
 			while (rs.next()) {

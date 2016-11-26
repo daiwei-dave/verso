@@ -1,36 +1,18 @@
 package verso;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import pojo.Book;
+import dao.BookDao;
 
 public class TestConcurrent extends Thread {
 
-	private final static Map<String, Object> CACHE = new HashMap<>();
-
-	public Object calc() {
-		try {
-			TimeUnit.SECONDS.sleep(10);
-		} catch (Exception e) {
-			
-		}
-		System.out.println("finish");
-		return 0;
-	}
-	
-	@Override
-	public void run() {
-		String key = "test";
-		if (!CACHE.containsKey(key)) synchronized(CACHE) {
-			if (!CACHE.containsKey(key))
-				CACHE.put(key, calc());
-		}
-		System.out.println(CACHE.get(key));
-	}
-	
+	private static BeanFactory context = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
+    
 	public static void main(String args[]) {
-		for (int i=0; i<10; i++) {
-			new TestConcurrent().start();
-		}
+	    BookDao dao = (BookDao) context.getBean("bookDao");
+	    Book book = dao.findByName("Harold Abelson");
+	    System.out.println(book);
 	}
 }

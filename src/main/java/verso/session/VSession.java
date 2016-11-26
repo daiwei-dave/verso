@@ -1,7 +1,6 @@
 package verso.session;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -11,25 +10,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import verso.config.DataSource;
+import javax.sql.DataSource;
+
 import verso.config.Environment;
 import verso.mapper.MappedProxy;
 import verso.mapper.MappedResult;
 import verso.mapper.MappedStatement;
 
 public class VSession {
-	private Environment env;
-	Map<String, Object> cache = new HashMap<String, Object>();
+	private Environment config;
 
+	public <T> T getDao(Class<T> clazz) {
+	    return MappedProxy.newInstance(clazz, this);
+	}
+	
 	private Connection conn = null;
 	
-	public VSession(Environment env) {
-		this.env = env;
-		DataSource data = env.getDataSource();
+	public VSession(Environment config) {
+		this.config = config;
+		DataSource data = config.getDataSource();
 		while (true) {
 			try {
-				conn = DriverManager.getConnection(data.getUrl(),
-						data.getUsername(), data.getPassword());
+				conn = data.getConnection();
 				if (conn == null) {
 					throw new SQLException();
 				} else {
@@ -47,34 +49,32 @@ public class VSession {
 		}
 	}
 
+	public void beginTransaction() {
+        System.out.println("beginTransaction");
+        try {
+            conn = config.getDataSource().getConnection();
+            conn.setAutoCommit(false);// 禁止自动提交，设置回滚点
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }  
+	}
+	
 	public void rollback() {
+	    System.out.println("rollback");
 		try {
-			conn.rollback();
+		    if (conn != null) conn.rollback();
 		} catch (SQLException e) {
-			System.err.println(e);
+		    e.printStackTrace();
 		}
 	}
-
-	public void finish() {
-		if (conn == null)
-			return;
+	
+	public void commit() {
+	    System.out.println("commit");
 		try {
-			conn.commit(); // 事务提交
-			conn.close();
-			cache.clear();
+		    if (conn != null) conn.commit();
 		} catch (SQLException e) {
-			System.err.println(e);
+			e.printStackTrace();
 		}
-	}
-
-	public Object getBean(String name) {
-		if (!cache.containsKey(name)) synchronized(cache) {
-			if (!cache.containsKey(name)) {
-				Class<?> clazz = env.getDao(name);
-				cache.put(name, MappedProxy.newInstance(clazz, this));
-			}
-		}
-		return cache.get(name);
 	}
 
 	public Object select(MappedStatement mappedStmt, Object[] args)
@@ -83,12 +83,12 @@ public class VSession {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt	 = mappedStmt.createStatement(conn, args);
+			stmt = mappedStmt.createStatement(conn, args);
 			rs = stmt.executeQuery();
 			// 奖ResultSet转为注解指定的resultType类型，存入函数的返回值returnType类型
 			String resultType = mappedStmt.getResultType();
 			Class<?> returnType = mappedStmt.getReturnType();
-			MappedResult mapper = env.getResult(resultType);
+			MappedResult mapper = config.getResult(resultType);
 			return mapper.getResult(rs, returnType);
 		} finally {
 			if (rs != null) rs.close();

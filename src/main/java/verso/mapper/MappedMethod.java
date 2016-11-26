@@ -7,16 +7,14 @@ import verso.session.VSession;
 public class MappedMethod 
 {
 	Method method;
-	VSession session;
 	MappedStatement stmt;
 
-	public MappedMethod(Method method, VSession session) throws Exception {
+	public MappedMethod(Method method) throws Exception {
 		this.method = method;
 		this.stmt = MappedStatement.getInstance(method);
-		this.session = session;
 	}
 	
-	public Object invoke(Object args[]) throws Exception {
+	public Object invoke(Object args[], VSession session) throws Exception {
 		//System.out.println("invoke : " + anno.sql());
 		//System.out.println("args : " + Arrays.toString(args));
 
