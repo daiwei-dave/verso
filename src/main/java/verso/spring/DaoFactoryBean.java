@@ -2,23 +2,22 @@ package verso.spring;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.dao.support.DaoSupport;
-
 import static org.springframework.util.Assert.notNull;
-import verso.config.Environment;
-import verso.session.VSession;
+import verso.session.LazySession;
+import verso.session.Session;
 import verso.session.VSessionFactory;
 
 public class DaoFactoryBean<T> extends DaoSupport implements FactoryBean<T> {
 
     private Class<T> clazz;
-    private VSession session;
+    private Session session;
     
     public void setClazz(Class<T> clazz) {
         this.clazz = clazz;
     }
     
-    public void setSessionFactory(VSessionFactory factory) {
-        session = factory.getSession();
+    public void setSessionFactory(VSessionFactory sessionFactory) {
+        session = new LazySession(sessionFactory);
     }
     
     @Override
@@ -39,7 +38,6 @@ public class DaoFactoryBean<T> extends DaoSupport implements FactoryBean<T> {
     @Override
     protected void checkDaoConfig() throws IllegalArgumentException {
         notNull(session, "Property 'sessionFactory' are required");
-        // TODO
     }
 
 }

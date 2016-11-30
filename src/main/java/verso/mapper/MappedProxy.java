@@ -5,15 +5,15 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
-import verso.session.VSession;
+import verso.session.Session;
 
 public class MappedProxy<T> implements InvocationHandler {
 
-    private VSession session;
+    private Session session;
     private final Map<Method, MappedMethod> CACHE = new HashMap<>();
 
     @SuppressWarnings("unchecked")
-    public static <T> T newInstance(Class<T> clazz, VSession session) {
+    public static <T> T newInstance(Class<T> clazz, Session session) {
         MappedProxy<T> proxy = new MappedProxy<>();
         proxy.session = session;
         return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] { clazz }, proxy);
@@ -28,5 +28,4 @@ public class MappedProxy<T> implements InvocationHandler {
         }
         return mappedMethod.invoke(args, session);
     }
-
 }

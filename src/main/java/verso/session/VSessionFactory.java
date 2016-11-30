@@ -7,7 +7,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import verso.config.Environment;
 import verso.config.XMLConfigBuilder;
-import verso.transaction.MyTransactionSynchronizationAdapter;
+import verso.transaction.VTransactionSynchronizationAdapter;
 
 public class VSessionFactory
 {
@@ -30,22 +30,7 @@ public class VSessionFactory
 	    return this.config;
 	}
 	
-    public VSession getSession() {  
-        if (TransactionSynchronizationManager.hasResource(this)) {
-            return (VSession) TransactionSynchronizationManager.getResource(this);
-        }
-        return openSession();
-    }  
-    
 	public VSession openSession() {
-	    VSession session = new VSession(config);
-	    if (TransactionSynchronizationManager.isSynchronizationActive()) {
-	        // 注册进当前线程管理一个Synchronization  
-	        TransactionSynchronization transactionSynchronization = new MyTransactionSynchronizationAdapter(this);  
-	        TransactionSynchronizationManager.registerSynchronization(transactionSynchronization);  
-	        // 绑定新开启的一个MySession进当前线程事务管理器  
-	        TransactionSynchronizationManager.bindResource(this, session);
-	    }
-        return session;
+	    return new VSession(config);
 	}
 }

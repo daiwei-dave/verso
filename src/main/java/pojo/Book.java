@@ -55,7 +55,7 @@ public class Book {
 	
 	@Override
 	public String toString() {
-	    return String.format("id=%d, author=%d, name=%s, comment=%s, finishTime=%s", 
+	    return String.format("[Book] id=%d, author=%d, name=%s, comment=%s, finishTime=%s", 
 	            id, authorId, name, comment, finishTime);
 	}
 }

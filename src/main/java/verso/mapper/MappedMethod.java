@@ -2,7 +2,7 @@ package verso.mapper;
 
 import java.lang.reflect.Method;
 
-import verso.session.VSession;
+import verso.session.Session;
 
 public class MappedMethod 
 {
@@ -14,7 +14,7 @@ public class MappedMethod
 		this.stmt = MappedStatement.getInstance(method);
 	}
 	
-	public Object invoke(Object args[], VSession session) throws Exception {
+	public Object invoke(Object args[], Session session) throws Exception {
 		//System.out.println("invoke : " + anno.sql());
 		//System.out.println("args : " + Arrays.toString(args));
 
@@ -25,8 +25,7 @@ public class MappedMethod
 		case SELECT:
 			return session.select(stmt, args);
 		case FLUSH:
-			session.test();
-			//result = sqlSession.flushStatements();
+			// TODO
 			break;
 		default:
 			

@@ -1,10 +1,24 @@
 package pojo;
 
+import verso.annotation.Column;
+import verso.annotation.Table;
+
+@Table("user")
 public class User {
+    
+    @Column("id")
 	Integer id;
+    
+    @Column("name")
 	String name;
+    
+    @Column("passport")
 	String password;
+    
+    @Column("flag")
 	String flag;
+    
+    @Column("email")
 	String email;
 
 	public String getEmail() {
@@ -36,5 +50,11 @@ public class User {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	@Override
+	public String toString() {
+	    return String.format("[User] id=%d, name=%s, password=%s, flag=%s, email=%s", 
+	            id, name, password, flag, email);
 	}
 }

@@ -8,6 +8,8 @@ import verso.annotation.Operation;
 public interface UserDao {
 	@Operation("insert into user (name, password, email) values({name}, {password}, {email})")
 	void insert(User user);
+	@Operation("insert into users (name, password, email) values({name}, {password}, {email})")
+	void insert2(User user);
 	@Operation("update user set name={name}, password={password}, email={email}, flag={flag} where id={id}")
 	void update(User t);
 	@Operation(value="select * from user", result="user")
