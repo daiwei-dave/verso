@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import verso.config.DataSource;
+import verso.config.VDataSource;
 import verso.config.Environment;
 import verso.mapper.MappedProxy;
 import verso.mapper.MappedResult;
@@ -25,7 +25,7 @@ public class VSession {
 	
 	public VSession(Environment env) {
 		this.env = env;
-		DataSource data = env.getDataSource();
+		VDataSource data = env.getDataSource();
 		while (true) {
 			try {
 				conn = DriverManager.getConnection(data.getUrl(),

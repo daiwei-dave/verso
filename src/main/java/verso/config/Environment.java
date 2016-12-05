@@ -11,7 +11,7 @@ import verso.mapper.MappedResult;
  */
 public class Environment {
 	
-	private DataSource data;
+	private VDataSource data;
 	private Map<String, Class<?>> daoMap = new HashMap<>();
 	private Map<String, MappedResult> resultMap = new HashMap<>();
     
@@ -27,10 +27,10 @@ public class Environment {
 	public MappedResult getResult(String key) {
 		return resultMap.get(key);
 	}
-	public DataSource getDataSource() {
+	public VDataSource getDataSource() {
 		return data;
 	}
-	public void setDataSource(DataSource dataSource) {
-		this.data = dataSource;
+	public void setDataSource(VDataSource vDataSource) {
+		this.data = vDataSource;
 	}
 }
