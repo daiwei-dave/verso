@@ -25,7 +25,7 @@ public class VSession implements Session {
     }
     
     @Override
-    public <T> T select(String sql, Class<T> mapperResult, Object... arg) throws SQLException {
+    public void exec(String sql) throws SQLException {
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
@@ -36,8 +36,8 @@ public class VSession implements Session {
 			    for (int i=1; i<=rsmd.getColumnCount(); i++) {
 			        System.out.println(rsmd.getColumnLabel(i)+"="+rs.getObject(i));
 			    }
+			    System.out.println();
 			}
-			return null;
 		} finally {
 			if (rs != null) rs.close();
 			if (stmt != null) stmt.close();
