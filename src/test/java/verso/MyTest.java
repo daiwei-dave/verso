@@ -8,6 +8,7 @@ public class MyTest {
 
     public static void main(String args[]) throws Exception {
         DataSource data = new VDataSource(driverClassName, url, "root", "123456");
-        new VSession(data).exec("select * from article where id=1");
+        Session session = new VSession(data);
+        session.exec("select * from article where id=1");
     }
 }
