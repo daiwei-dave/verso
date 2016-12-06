@@ -1,4 +1,4 @@
-package verso;
+package verso.session;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -32,7 +32,8 @@ public class VSession implements Session {
 		    stmt = getConnection().createStatement();
 			rs = stmt.executeQuery(sql);
 			ResultSetMetaData rsmd = rs.getMetaData();
-			if (rs.next()) {
+			System.out.println("--------------------print--------------------");
+			while (rs.next()) {
 			    for (int i=1; i<=rsmd.getColumnCount(); i++) {
 			        System.out.println(rsmd.getColumnLabel(i)+"="+rs.getObject(i));
 			    }

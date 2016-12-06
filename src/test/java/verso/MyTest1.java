@@ -2,7 +2,10 @@ package verso;
 
 import javax.sql.DataSource;
 
-public class MyTest {
+import verso.session.Session;
+import verso.session.VSession;
+
+public class MyTest1 {
     private static String driverClassName = "com.mysql.jdbc.Driver";
     private static String url = "jdbc:mysql://localhost:3306/webserver?useUnicode=true&characterEncoding=utf8";
 

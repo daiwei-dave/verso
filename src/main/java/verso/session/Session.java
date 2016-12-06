@@ -1,4 +1,4 @@
-package verso;
+package verso.session;
 
 import java.sql.SQLException;
 
